@@ -1,13 +1,12 @@
 package cz.zcu.kiv.md2odt.web.controller;
 
 import cz.zcu.kiv.md2odt.web.dto.UploadForm;
-import cz.zcu.kiv.md2odt.web.service.ConverterService;
+import cz.zcu.kiv.md2odt.web.service.Converter;
 import cz.zcu.kiv.md2odt.web.service.ConverterException;
+import cz.zcu.kiv.md2odt.web.service.LogCollector;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -15,10 +14,10 @@ import java.io.IOException;
 
 /**
  *
- * @version 2017-04-14
+ * @version 2017-04-15
  * @author Patrik Harag
  */
-@RestController
+@Controller
 @RequestMapping("/convert")
 public class ConverterController {
 
@@ -26,16 +25,20 @@ public class ConverterController {
     private static final String CONTENT_TYPE = "application/vnd.oasis.opendocument.text";
 
     @Autowired
-    private ConverterService converter;
+    private Converter converter;
+
+    @Autowired
+    private LogCollector logging;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
     public void uploadHandler(@ModelAttribute UploadForm form, HttpServletResponse response)
             throws IOException, ConverterException {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
 
         try {
-            converter.convert(form, out);
+            logging.collectLogs(() -> converter.convert(form, out));
         } catch (Throwable e) {
             throw new ConverterException(e);
         }

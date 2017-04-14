@@ -1,9 +1,10 @@
-package cz.zcu.kiv.md2odt.web.service;
+package cz.zcu.kiv.md2odt.web.service.convert;
 
 import cz.zcu.kiv.md2odt.Converter;
 import cz.zcu.kiv.md2odt.MD2odt;
 import cz.zcu.kiv.md2odt.web.config.FileUploadConfig;
 import cz.zcu.kiv.md2odt.web.dto.UploadForm;
+import cz.zcu.kiv.md2odt.web.service.StupidClientException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +18,13 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @version 2017-04-14
+ * @version 2017-04-15
  * @author Patrik Harag
  */
 @Service
-public class ConverterService {
+public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
 
-    private static final Logger LOGGER = Logger.getLogger(ConverterService.class);
+    private static final Logger LOGGER = Logger.getLogger(ConverterImpl.class);
 
     static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 

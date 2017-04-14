@@ -2,5 +2,5 @@
   "name": "MD2odt",
   "description": "Markdown to ODT converter",
   "image": "heroku/java",
-  "addons": []
+  "addons": [ "heroku-postgresql" ]
 }

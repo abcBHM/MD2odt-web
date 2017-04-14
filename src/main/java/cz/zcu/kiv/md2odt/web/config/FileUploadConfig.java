@@ -24,8 +24,6 @@ public class FileUploadConfig {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
         resolver.setDefaultEncoding(DEFAULT_ENCODING);
-
-
         resolver.setUploadTempDir(new FileSystemResource(getTempFolder()));
 
         return new CommonsMultipartResolver();

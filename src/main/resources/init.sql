@@ -1,0 +1,7 @@
+
+CREATE TABLE IF NOT EXISTS logs (
+    id   SERIAL PRIMARY KEY NOT NULL,
+    time TIMESTAMP NOT NULL DEFAULT now(),
+    log  TEXT NOT NULL,
+    exc  TEXT
+)
