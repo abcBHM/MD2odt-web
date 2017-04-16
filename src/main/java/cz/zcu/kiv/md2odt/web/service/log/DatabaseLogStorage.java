@@ -1,6 +1,6 @@
 package cz.zcu.kiv.md2odt.web.service.log;
 
-import cz.zcu.kiv.md2odt.web.dto.Log;
+import cz.zcu.kiv.md2odt.web.dto.LogEntry;
 import cz.zcu.kiv.md2odt.web.service.LogStorage;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,14 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ *
  * @author Patrik Harag
- * @version 2017-04-15
+ * @version 2017-04-16
  */
 public class DatabaseLogStorage implements LogStorage {
 
@@ -59,23 +59,26 @@ public class DatabaseLogStorage implements LogStorage {
     }
 
     @Override
-    public void add(Log log) {
-        String sql = "INSERT INTO logs (log, exc) VALUES (?, ?)";
-        jdbc.update(sql, log.getLog(), log.getException());
+    public void add(LogEntry log) {
+        String sql = "INSERT INTO logs (\"start-time\", \"end-time\", \"log\", \"exception\") VALUES (?, ?, ?, ?)";
+        jdbc.update(sql, log.getStartTime(), log.getEndTime(), log.getLog(), log.getException());
     }
 
     @Override
-    public List<Log> getAll() {
+    public List<LogEntry> getAll() {
         SqlRowSet rows = jdbc.queryForRowSet("SELECT * FROM logs");
-        List<Log> logs = new ArrayList<>();
+        List<LogEntry> logs = new ArrayList<>();
 
         while (rows.next()) {
             int id = rows.getInt("id");
-            Timestamp time = rows.getTimestamp("time");
-            String log = rows.getString("log");
-            String exc = rows.getString("exc");
 
-            logs.add(new Log(id, time, log, exc));
+            long start = rows.getLong("start-time");
+            long end = rows.getLong("end-time");
+
+            String log = rows.getString("log");
+            String exc = rows.getString("exception");
+
+            logs.add(new LogEntry(id, start, end, log, exc));
         }
         return logs;
     }

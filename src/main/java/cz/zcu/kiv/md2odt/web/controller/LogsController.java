@@ -1,6 +1,6 @@
 package cz.zcu.kiv.md2odt.web.controller;
 
-import cz.zcu.kiv.md2odt.web.dto.Log;
+import cz.zcu.kiv.md2odt.web.dto.LogEntry;
 import cz.zcu.kiv.md2odt.web.service.LogStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class LogsController {
 
     @RequestMapping(value = {"/logs"}, produces={"application/json; charset=UTF-8"})
     @ResponseBody
-    public List<Log> showAll(Model model) {
+    public List<LogEntry> showAll(Model model) {
         return logStorage.getAll();
     }
 

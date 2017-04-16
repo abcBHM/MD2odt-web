@@ -1,6 +1,6 @@
 package cz.zcu.kiv.md2odt.web.service.log;
 
-import cz.zcu.kiv.md2odt.web.dto.Log;
+import cz.zcu.kiv.md2odt.web.dto.LogEntry;
 import cz.zcu.kiv.md2odt.web.service.LogCollector;
 import cz.zcu.kiv.md2odt.web.service.LogStorage;
 import cz.zcu.kiv.md2odt.web.service.StupidClientException;
@@ -17,7 +17,7 @@ import java.io.StringWriter;
  */
 public class LogCollectorImpl implements LogCollector {
 
-    private static final String PATTERN = "%d{HH:mm:ss,SSS} %c{1} - %m%n";
+    private static final String PATTERN = "%r %c{1} - %m%n";
 
     private static int counter = 0;
 
@@ -35,7 +35,7 @@ public class LogCollectorImpl implements LogCollector {
     @Override
     public void collectLogs(ThrowableRunnable runnable) throws Exception {
         StringWriter consoleWriter = new StringWriter();
-        PatternLayout layout = new PatternLayout(PATTERN);
+        MyPatternLayout layout = new MyPatternLayout(PATTERN);
         WriterAppender appender = new WriterAppender(layout, consoleWriter);
 
         appender.setName("JOB_" + getJobID());
@@ -43,16 +43,20 @@ public class LogCollectorImpl implements LogCollector {
 
         Logger.getRootLogger().addAppender(appender);
 
+        final long start = System.currentTimeMillis();
+        layout.setEpochStart(start);
+
         Exception exception = null;
         try {
             runnable.run();
         } catch (Exception e) {
             exception = e;
         }
+        final long end = System.currentTimeMillis();
 
         Logger.getRootLogger().removeAppender(appender);
 
-        asyncSave(new Log(consoleWriter.toString(), asString(exception)));
+        asyncSave(new LogEntry(start, end, consoleWriter.toString(), asString(exception)));
 
         if (exception != null)
             throw exception;
@@ -77,7 +81,7 @@ public class LogCollectorImpl implements LogCollector {
         return writer.toString();
     }
 
-    private void asyncSave(Log log) {
+    private void asyncSave(LogEntry log) {
         Thread thread = new Thread(() -> {
             savingService.add(log);
         }, "Log saving thread");
