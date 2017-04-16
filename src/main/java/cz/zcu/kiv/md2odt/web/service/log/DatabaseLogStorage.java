@@ -66,7 +66,7 @@ public class DatabaseLogStorage implements LogStorage {
 
     @Override
     public List<LogEntry> getAll() {
-        SqlRowSet rows = jdbc.queryForRowSet("SELECT * FROM logs");
+        SqlRowSet rows = jdbc.queryForRowSet("SELECT * FROM logs ORDER BY id DESC LIMIT 100");
         List<LogEntry> logs = new ArrayList<>();
 
         while (rows.next()) {

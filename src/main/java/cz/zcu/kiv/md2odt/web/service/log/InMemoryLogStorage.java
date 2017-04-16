@@ -3,8 +3,8 @@ package cz.zcu.kiv.md2odt.web.service.log;
 import cz.zcu.kiv.md2odt.web.dto.LogEntry;
 import cz.zcu.kiv.md2odt.web.service.LogStorage;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class InMemoryLogStorage implements LogStorage {
 
-    private final List<LogEntry> logs = new ArrayList<>();
+    private final List<LogEntry> logs = new LinkedList<>();
 
     @Override
     public boolean isPersistent() {
@@ -26,7 +26,7 @@ public class InMemoryLogStorage implements LogStorage {
         LogEntry copy = new LogEntry(logs.size(), log.getStartTime(), log.getEndTime(),
                 log.getLog(), log.getException());
 
-        logs.add(copy);
+        logs.add(0, copy);
     }
 
     @Override
