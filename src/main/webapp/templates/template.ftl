@@ -34,7 +34,7 @@
 
     <#include "template-nav.ftl">
 
-    <div class="container">
+    <div class="container" style="padding-bottom: 64px">
       <@page_body/>
     </div>
 
