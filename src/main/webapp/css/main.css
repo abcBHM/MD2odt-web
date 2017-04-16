@@ -1,13 +1,22 @@
 
-.error-output {
-    font-family: monospace;
-}
+/* TEMPLATE */
 
 footer p {
     padding-top: 12px;
     color: gray;
     font-size: small;
 }
+
+
+/* ERROR */
+
+.error-output {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+
+/* INDEX */
 
 .input-file-label {
     margin-top: -8px;
@@ -22,4 +31,22 @@ fieldset .form-group:first-of-type {
     margin-bottom: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+
+/* LOGS */
+
+.log {
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+.error-log {
+    white-space: pre-wrap;
+    font-family: monospace;
+    color: red;
+}
+
+.log-heading {
+    font-family: monospace;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  *
  * @author Patrik Harag
- * @version 2017-04-15
+ * @version 2017-04-16
  */
 public class InMemoryLogStorage implements LogStorage {
 
@@ -23,7 +23,10 @@ public class InMemoryLogStorage implements LogStorage {
 
     @Override
     public synchronized void add(LogEntry log) {
-        logs.add(log);
+        LogEntry copy = new LogEntry(logs.size(), log.getStartTime(), log.getEndTime(),
+                log.getLog(), log.getException());
+
+        logs.add(copy);
     }
 
     @Override

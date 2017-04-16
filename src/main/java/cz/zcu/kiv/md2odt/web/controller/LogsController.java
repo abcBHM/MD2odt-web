@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @version 2017-04-14
+ * @version 2017-04-16
  * @author Patrik Harag
  */
 @Controller
@@ -21,10 +21,17 @@ public class LogsController {
     @Autowired
     private LogStorage logStorage;
 
-    @RequestMapping(value = {"/logs"}, produces={"application/json; charset=UTF-8"})
+    @RequestMapping(value = {"/logs-raw"}, produces={"application/json; charset=UTF-8"})
     @ResponseBody
-    public List<LogEntry> showAll(Model model) {
+    public List<LogEntry> logsRaw(Model model) {
         return logStorage.getAll();
+    }
+
+    @RequestMapping(value = {"/logs"})
+    public String logs(Model model) {
+        model.addAttribute("entries", logStorage.getAll());
+
+        return "logs";
     }
 
 }
