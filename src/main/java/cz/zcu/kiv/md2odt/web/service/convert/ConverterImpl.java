@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @version 2017-04-15
+ * @version 2017-04-19
  * @author Patrik Harag
  */
 @Service
@@ -31,6 +31,7 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
     private static final int PATTERN_FLAGS = Pattern.UNICODE_CHARACTER_CLASS;
     static final Pattern ZIP_PATTERN = Pattern.compile("(?i).+\\.(zip|jar)", PATTERN_FLAGS);
     static final Pattern MD_PATTERN = Pattern.compile("(?i).+\\.(md|markdown|txt)", PATTERN_FLAGS);
+    static final Pattern TEMPLATE_PATTERN = Pattern.compile("(?i)(^[^.]+|.+\\.(odt|ott))", PATTERN_FLAGS);
 
     public void convert(UploadForm form, OutputStream out) throws Exception {
         Converter converter = MD2odt.converter();
@@ -86,8 +87,17 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
 
         if (template.isEmpty()) {
             LOGGER.info("Template not set");
+
         } else {
-            converter.setTemplate(template.getInputStream());
+            String filename = template.getOriginalFilename();
+
+            if (TEMPLATE_PATTERN.matcher(filename).matches()) {
+                converter.setTemplate(template.getInputStream());
+                LOGGER.info("Template set");
+            } else {
+                String supported = "Supported: " + TEMPLATE_PATTERN.toString();
+                throw new StupidClientException("Unknown file type!\n\n" + supported);
+            }
         }
     }
 
