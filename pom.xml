@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.github.abcBHM</groupId>
             <artifactId>MD2odt</artifactId>
-            <version>7ca5d9089f</version>
+            <version>7faec6d5e5</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
