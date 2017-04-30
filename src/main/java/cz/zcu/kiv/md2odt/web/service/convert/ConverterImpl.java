@@ -66,7 +66,7 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
         String filename = input.getOriginalFilename();
         if (MD_PATTERN.matcher(filename).matches()) {
             InputStream inputStream = input.getInputStream();
-            converter.setInputStream(inputStream, charset(form));
+            converter.setInput(inputStream, charset(form));
             LOGGER.info("Input type: text file");
 
 
