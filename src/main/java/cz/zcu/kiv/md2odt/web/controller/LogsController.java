@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Logs controller.
  *
  * @version 2017-04-21
  * @author Patrik Harag

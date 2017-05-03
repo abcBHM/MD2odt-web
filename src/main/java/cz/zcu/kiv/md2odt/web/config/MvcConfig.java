@@ -10,6 +10,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 /**
+ * Spring MVC configuration.
  *
  * @version 2017-04-14
  * @author Patrik Harag

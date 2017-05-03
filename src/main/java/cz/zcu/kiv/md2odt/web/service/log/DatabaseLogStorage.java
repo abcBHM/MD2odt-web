@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Stores logs entries into PostgreSQL.
  *
  * @author Patrik Harag
  * @version 2017-04-16

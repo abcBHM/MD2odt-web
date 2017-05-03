@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Stores log entries in memory.
  *
  * @author Patrik Harag
  * @version 2017-04-16

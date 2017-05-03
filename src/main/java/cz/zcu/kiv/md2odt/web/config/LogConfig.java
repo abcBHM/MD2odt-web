@@ -6,16 +6,16 @@ import cz.zcu.kiv.md2odt.web.service.log.DatabaseLogStorage;
 import cz.zcu.kiv.md2odt.web.service.log.InMemoryLogStorage;
 import cz.zcu.kiv.md2odt.web.service.log.LogCollectorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
 /**
+ * Logging configuration.
  *
  * @author Patrik Harag
- * @version 2017-04-15
+ * @version 2017-05-03
  */
 @Configuration
 public class LogConfig {
@@ -23,11 +23,8 @@ public class LogConfig {
     @Autowired(required = false)
     private DataSource dataSource;
 
-    @Autowired
-    private ApplicationContext appContext;
-
     @Bean
-    public LogStorage logSavingService() {
+    public LogStorage logStorage() {
         if (dataSource != null)
             return new DatabaseLogStorage(dataSource);
         else
@@ -37,8 +34,7 @@ public class LogConfig {
 
     @Bean
     public LogCollector logCollectingService() {
-        LogStorage logStorage = appContext.getBean(LogStorage.class);
-        return new LogCollectorImpl(logStorage);
+        return new LogCollectorImpl();
     }
 
 }

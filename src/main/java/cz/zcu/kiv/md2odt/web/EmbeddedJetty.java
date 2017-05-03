@@ -13,11 +13,12 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
+ * Jetty initializer.
  *
  * @version 2017-04-14
  * @author Patrik Harag
  */
-public class EmbeddedJetty {
+class EmbeddedJetty {
 
     private static final int DEFAULT_PORT = 5000;
 
@@ -25,7 +26,10 @@ public class EmbeddedJetty {
     private static final String MAPPING_URL = "/";
     private static final String WEBAPP_DIRECTORY = "webapp";
 
-    public static void init() throws Exception {
+    /**
+     * Initializes Jetty with Spring MVC.
+     */
+    static void init() throws Exception {
         String envPort = System.getenv("PORT");
         int port = (envPort != null)
                 ? Integer.valueOf(envPort)

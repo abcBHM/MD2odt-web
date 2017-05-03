@@ -1,8 +1,8 @@
 package cz.zcu.kiv.md2odt.web.service.log;
 
 import cz.zcu.kiv.md2odt.web.dto.LogEntry;
+import cz.zcu.kiv.md2odt.web.dto.LogEntryNew;
 import cz.zcu.kiv.md2odt.web.service.LogCollector;
-import cz.zcu.kiv.md2odt.web.service.LogStorage;
 import cz.zcu.kiv.md2odt.web.service.StupidClientException;
 import cz.zcu.kiv.md2odt.web.service.ThrowableRunnable;
 import org.apache.log4j.*;
@@ -11,9 +11,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
+ * Implementation of {@link LogCollector}.
  *
  * @author Patrik Harag
- * @version 2017-04-15
+ * @version 2017-05-03
  */
 public class LogCollectorImpl implements LogCollector {
 
@@ -21,24 +22,18 @@ public class LogCollectorImpl implements LogCollector {
 
     private static int counter = 0;
 
-    public static synchronized int getJobID() {
+    private static synchronized int newJobID() {
         return counter++;
     }
 
 
-    private LogStorage savingService;
-
-    public LogCollectorImpl(LogStorage savingService) {
-        this.savingService = savingService;
-    }
-
     @Override
-    public void collectLogs(ThrowableRunnable runnable) throws Exception {
+    public LogEntryNew collectLogs(ThrowableRunnable runnable) {
         StringWriter consoleWriter = new StringWriter();
         MyPatternLayout layout = new MyPatternLayout(PATTERN);
         WriterAppender appender = new WriterAppender(layout, consoleWriter);
 
-        appender.setName("JOB_" + getJobID());
+        appender.setName("JOB_" + newJobID());
         appender.setThreshold(Level.INFO);
 
         Logger.getRootLogger().addAppender(appender);
@@ -55,11 +50,9 @@ public class LogCollectorImpl implements LogCollector {
         final long end = System.currentTimeMillis();
 
         Logger.getRootLogger().removeAppender(appender);
+        String log = consoleWriter.toString();
 
-        asyncSave(new LogEntry(start, end, consoleWriter.toString(), asString(exception)));
-
-        if (exception != null)
-            throw exception;
+        return new LogEntryNew(start, end, log, asString(exception), exception);
     }
 
     private String asString(Exception e) {
@@ -79,14 +72,6 @@ public class LogCollectorImpl implements LogCollector {
 
         printWriter.flush();
         return writer.toString();
-    }
-
-    private void asyncSave(LogEntry log) {
-        Thread thread = new Thread(() -> {
-            savingService.add(log);
-        }, "Log saving thread");
-
-        thread.start();
     }
 
 }

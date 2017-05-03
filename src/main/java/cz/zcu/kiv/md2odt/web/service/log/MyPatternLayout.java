@@ -6,6 +6,7 @@ import org.apache.log4j.helpers.PatternParser;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
+ * Custom log4j pattern layout.
  *
  * @author Patrik Harag
  * @version 2017-04-16

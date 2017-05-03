@@ -4,7 +4,7 @@ import cz.zcu.kiv.md2odt.Converter;
 import cz.zcu.kiv.md2odt.MD2odt;
 import cz.zcu.kiv.md2odt.web.config.ConverterConfig;
 import cz.zcu.kiv.md2odt.web.config.FileUploadConfig;
-import cz.zcu.kiv.md2odt.web.dto.UploadForm;
+import cz.zcu.kiv.md2odt.web.dto.Request;
 import cz.zcu.kiv.md2odt.web.service.StupidClientException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
+ * Converter implementation.
  *
  * @version 2017-04-21
  * @author Patrik Harag
@@ -37,11 +38,12 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
     @Autowired
     private Predicate<URL> resourceFilter;
 
-    public void convert(UploadForm form, OutputStream out) throws Exception {
+    @Override
+    public void convert(Request request, OutputStream out) throws Exception {
         Converter converter = MD2odt.converter();
 
-        initInput(form, converter);
-        initTemplate(form, converter);
+        initInput(request, converter);
+        initTemplate(request, converter);
 
         converter
                 .setOutput(out)
@@ -54,8 +56,8 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
         LOGGER.info("Converting finished");
     }
 
-    private void initInput(UploadForm form, Converter converter) throws IOException {
-        MultipartFile input = form.getInput();
+    private void initInput(Request request, Converter converter) throws IOException {
+        MultipartFile input = request.getInput();
 
         if (input.isEmpty())
             throw new StupidClientException("No input file!");
@@ -66,13 +68,13 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
         String filename = input.getOriginalFilename();
         if (MD_PATTERN.matcher(filename).matches()) {
             InputStream inputStream = input.getInputStream();
-            converter.setInput(inputStream, charset(form));
+            converter.setInput(inputStream, charset(request));
             LOGGER.info("Input type: text file");
 
 
         } else if (ZIP_PATTERN.matcher(filename).matches()) {
             InputStream inputStream = input.getInputStream();
-            converter.setInputZip(inputStream, charset(form));
+            converter.setInputZip(inputStream, charset(request));
             LOGGER.info("Input type: zip");
 
         } else {
@@ -85,8 +87,8 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
         }
     }
 
-    private void initTemplate(UploadForm form, Converter converter) throws IOException {
-        MultipartFile template = form.getTemplate();
+    private void initTemplate(Request request, Converter converter) throws IOException {
+        MultipartFile template = request.getTemplate();
 
         if (template.getSize() > FileUploadConfig.MAX_UPLOAD_SIZE)
             throw new StupidClientException("Template is too big!");
@@ -107,15 +109,15 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
         }
     }
 
-    private Charset charset(UploadForm form) {
+    private Charset charset(Request request) {
         Charset charset;
 
-        if (form.getEncoding() != null) {
+        if (request.getEncoding() != null) {
             try {
-                charset = Charset.forName(form.getEncoding());
+                charset = Charset.forName(request.getEncoding());
 
             } catch (Exception e) {
-                LOGGER.warn("Unsupported encoding: " + form.getEncoding());
+                LOGGER.warn("Unsupported encoding: " + request.getEncoding());
                 charset = ConverterConfig.DEFAULT_ENCODING;
             }
         } else {
@@ -123,7 +125,7 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
             charset = ConverterConfig.DEFAULT_ENCODING;
         }
 
-        LOGGER.info("Selected encoding: " + form.getEncoding());
+        LOGGER.info("Selected encoding: " + request.getEncoding());
 
         return charset;
     }

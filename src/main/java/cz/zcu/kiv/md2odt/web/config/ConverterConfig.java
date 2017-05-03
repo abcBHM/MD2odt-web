@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 
 /**
+ * MD2odt converter configuration.
  *
  * @version 2017-04-21
  * @author Patrik Harag

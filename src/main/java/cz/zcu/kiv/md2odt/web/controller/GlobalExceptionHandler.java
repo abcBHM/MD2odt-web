@@ -19,6 +19,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.util.HtmlUtils;
 
 /**
+ * Contains global exception handlers.
  *
  * @version 2017-04-14
  * @author Patrik Harag

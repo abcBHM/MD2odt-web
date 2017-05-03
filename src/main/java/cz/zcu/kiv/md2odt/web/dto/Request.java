@@ -3,11 +3,12 @@ package cz.zcu.kiv.md2odt.web.dto;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * Data object for request.
  *
  * @author Patrik Harag
- * @version 2017-04-14
+ * @version 2017-05-03
  */
-public class UploadForm {
+public class Request {
 
     private MultipartFile input;
     private MultipartFile template;
