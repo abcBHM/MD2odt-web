@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Converter implementation.
  *
- * @version 2017-04-21
+ * @version 2017-05-03
  * @author Patrik Harag
  */
 @Service
@@ -59,7 +59,7 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
     private void initInput(Request request, Converter converter) throws IOException {
         MultipartFile input = request.getInput();
 
-        if (input.isEmpty())
+        if (input == null || input.isEmpty())
             throw new StupidClientException("No input file!");
 
         if (input.getSize() > FileUploadConfig.MAX_UPLOAD_SIZE)
@@ -90,13 +90,13 @@ public class ConverterImpl implements cz.zcu.kiv.md2odt.web.service.Converter {
     private void initTemplate(Request request, Converter converter) throws IOException {
         MultipartFile template = request.getTemplate();
 
-        if (template.getSize() > FileUploadConfig.MAX_UPLOAD_SIZE)
-            throw new StupidClientException("Template is too big!");
-
-        if (template.isEmpty()) {
+        if (template == null || template.isEmpty()) {
             LOGGER.info("Template not set");
 
         } else {
+            if (template.getSize() > FileUploadConfig.MAX_UPLOAD_SIZE)
+                throw new StupidClientException("Template is too big!");
+
             String filename = template.getOriginalFilename();
 
             if (TEMPLATE_PATTERN.matcher(filename).matches()) {

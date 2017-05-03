@@ -115,6 +115,7 @@
             <artifactId>groovy-all</artifactId>
             <version>2.4.4</version>
             <scope>test</scope>
+            <classifier>indy</classifier>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -186,6 +187,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <invokeDynamic>true</invokeDynamic>
+                </configuration>
             </plugin>
 
             <!-- JAR -->
